@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<script>window.ROOTDIR = "/src";</script>
+
+<link href="./3rdparty/bootstrap/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="../3rdparty/jquery/jquery-ui-1.11.2/jquery-ui.css">
+
+<script src="./3rdparty/jquery/jquery-1.11.2.js"></script>
+<script src="./3rdparty/jquery/jquery-ui-1.11.2/jquery-ui.js"></script>
+<script src="./3rdparty/jquery/jquery.history.js"></script>
+
+<script src="./3rdparty/ace/src/ace.js"></script>
+<script src="./3rdparty/ace/src/ext-language_tools.js"></script>
+<script src="./3rdparty/ace/src/ext-modelist.js"></script>
+<script src="./3rdparty/ace/src/keybinding-vim.js"></script>
+
+<style type="text/css" media="screen">
+  #editor { 
+      margin: 0;
+      position: absolute;
+      top: 44px;
+      bottom: 0;
+      left: 0;
+      right: 0;
+  }
+  .marginl {
+    margin-left: 0;
+  }
+
+  #resizable { width: 100%; height: 100%; padding: 0.5em; }
+  table.flist	{border-spacing: 2px; width: 100%; }
+  div.pathurl	{/*margin-top: 1em;*/ font-size: 150%; border-bottom: #ddd solid 1px;}
+
+</style>
+  
+</head>
+ 
+<body>
+ 
+<div class="container marginl">
+ 
+<!-------->
+<div id="content" >
+    <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
+        <li><a href="#dirview" id="tab2" data-toggle="tab">Dir</a></li>
+        <li class="active"><a href="#fileview" id="tab1" data-toggle="tab">Files </a> </li>
+    </ul>
+    <div id="my-tab-content" class="tab-content">
+        <div class="tab-pane active" id="fileview">
+            <div id="editor" class="ui-widget-content"></div>
+        </div>
+        <div class="tab-pane" id="dirview">
+              <div class="pathurl"></div>
+             <table class='flist' id="filelist"></table>
+        </div>
+    </div>
+</div>
+ 
+
+</div>
+
+<script type="text/javascript">
+    jQuery(document).ready(function ($) {
+        $('#tabs').tab();
+    });
+</script>    
+
+<script src="./gtagviewer/dirlist.js"></script>
+<script src="./gtagviewer/split.js"></script>
+<script src="./gtagviewer/filehistory.js"></script>
+<script src="./gtagviewer/filetags.js"></script>
+<script src="./gtagviewer/gtags.js"></script>
+
+<script src="./3rdparty/bootstrap/bootstrap.js"></script>
+</body>
+</html>
+
