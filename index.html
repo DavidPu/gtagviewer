@@ -6,16 +6,15 @@
 
 <link href="./3rdparty/bootstrap/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="../3rdparty/jquery/jquery-ui-1.11.2/jquery-ui.css">
-
+<link rel="stylesheet" href="../3rdparty/jquery/jquery.suggest.css" />
 <script src="./3rdparty/jquery/jquery-1.11.2.js"></script>
 <script src="./3rdparty/jquery/jquery-ui-1.11.2/jquery-ui.js"></script>
 <script src="./3rdparty/jquery/jquery.history.js"></script>
-
+<script src='./3rdparty/jquery/jquery.suggest.js'></script>
 <script src="./3rdparty/ace/src/ace.js"></script>
 <script src="./3rdparty/ace/src/ext-language_tools.js"></script>
 <script src="./3rdparty/ace/src/ext-modelist.js"></script>
 <script src="./3rdparty/ace/src/keybinding-vim.js"></script>
-
 <style type="text/css" media="screen">
   #editor { 
       margin: 0;
@@ -28,45 +27,140 @@
   .marginl {
     margin-left: 0;
   }
+  .searchbox {
+    position: absolute;
+    margin-right: 0px;
+    right: 0px;
+    width:40%;
+    top:4px;
+  }
+  /*
+  .dropdown-toggle {
+    width: 140px;
+    margin-right: 0px;
+  }*/
+  .sboxpos {
+    /*margin-left: 20px;*/
+    margin-top: 5px;
+    /*width: 90%;*/
+  }
 
   #resizable { width: 100%; height: 100%; padding: 0.5em; }
   table.flist	{border-spacing: 2px; width: 100%; }
-  div.pathurl	{/*margin-top: 1em;*/ font-size: 150%; border-bottom: #ddd solid 1px;}
+  div.pathurl	{/*margin-top: 1em;font-size: 150%; */ border-bottom: #ddd solid 1px;}
 
 </style>
-  
+<script type='text/javascript'>
+
+$(function() {
+	$('#searchbox').suggest('cgi-bin/global.py',{
+		minchars: 2,
+		delay: 100,
+		extraParams : {
+			type:  function() { return $('#searchtype').attr('stype').toLowerCase();},
+		}
+	});
+});
+
+function showpage(name) {
+  $('.active').removeClass('active');
+  $(['#', name].join('')).parent().addClass('active');
+  if (name == 'codeviewer') {
+    $('#filebrowser').hide();
+    $('#editor').show();
+  } else if (name == 'dirviewer') {
+    $('#editor').hide();
+    $('#filebrowser').show();
+  }
+}
+
+$(function(){
+    $('.pages').click(function(e){
+      showpage($(this)[0].id);
+      return false;
+    });
+    $('#editor').show();
+    $('#filebrowser').hide();
+    $('#searchtype').attr('stype', 'definition');
+});
+
+$(function(){
+    $('.searchopt').click(function(e){
+      $('#searchtype').attr('stype', $(this)[0].text)[0].text = $(this)[0].text;
+      $('#searchtype').append('<span class="caret"></span>');
+    });
+});
+
+</script>
 </head>
  
 <body>
- 
-<div class="container marginl">
- 
-<!-------->
-<div id="content" >
-    <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
-        <li><a href="#dirview" id="tab2" data-toggle="tab">Dir</a></li>
-        <li class="active"><a href="#fileview" id="tab1" data-toggle="tab">Files </a> </li>
-    </ul>
-    <div id="my-tab-content" class="tab-content">
-        <div class="tab-pane active" id="fileview">
-            <div id="editor" class="ui-widget-content"></div>
-        </div>
-        <div class="tab-pane" id="dirview">
-              <div class="pathurl"></div>
-             <table class='flist' id="filelist"></table>
-        </div>
+<nav class="navbar navbar-default" id="navbar">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">GtagViewer</a>
     </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li class="active"><a class="pages" id='codeviewer' href="#">Files <span class="sr-only">(current)</span></a></li>
+        <li><a class="pages" id='dirviewer'  href="#">Folders</a></li>
+        <li><a> <span class="glyphicon glyphicon-search" aria-hidden="true"></span></a></li>
+        <li><input id="searchbox" type="text" class="form-control sboxpos" placeholder="Search"></li>
+        <li class="dropdown">
+          <a href="#" id='searchtype' class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+            Definition <span class="caret"></span>
+            
+          </a>
+          <ul class="dropdown-menu" role="menu">
+            <li><a class="searchopt" href="#">Definition</a></li>
+            <li><a class="searchopt" href="#">Reference</a></li>
+            <li><a class="searchopt" href="#">Symbol</a></li>
+            <li><a class="searchopt" href="#">Path</a></li>
+            <li><a class="searchopt" href="#">Grep</a></li>
+            <li class="divider"></li>
+            <input type="checkbox" aria-label="..."> Icase
+            <input type="checkbox" aria-label="..."> Other
+          </ul>
+        </li>
+      </ul>
+      <!-- form class="navbar-form navbar-left" role="search">
+        <div class="form-group">
+          <input id="searchbox" type="text" class="form-control" placeholder="Search">
+        </div>
+        <button type="submit" class="btn btn-default">Submit</button>
+        
+      </form -->
+      <ul class="nav navbar-nav navbar-right">
+        <!-- li><a href="#">Link</a></li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Dropdown <span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+            <li><a href="#">Action</a></li>
+            <li><a href="#">Another action</a></li>
+            <li><a href="#">Something else here</a></li>
+            <li class="divider"></li>
+            <li><a href="#">Separated link</a></li>
+          </ul>
+        </li -->
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+<div id="editor" class="ui-widget-content"></div>
+
+<div id="filebrowser">
+   <div class="pathurl"></div>
+   <table class='flist' id="filelist"></table>
 </div>
- 
-
-</div>
-
-<script type="text/javascript">
-    jQuery(document).ready(function ($) {
-        $('#tabs').tab();
-    });
-</script>    
-
 <script src="./gtagviewer/dirlist.js"></script>
 <script src="./gtagviewer/split.js"></script>
 <script src="./gtagviewer/filehistory.js"></script>

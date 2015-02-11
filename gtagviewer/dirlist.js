@@ -53,7 +53,8 @@ $(function() {
             fh.pushFile(s.indexOf('/') == 0 ? s.substr(1) : s);
         }
     }
-    $("#tab1").click();
+    //show code viewer page
+    showpage('codeviewer');
   }
   
   function updatePath(path) {
@@ -116,7 +117,8 @@ $(function() {
             var fh = env ?  env.fileHistory : null;
             if (fh) {
                 fh.pushFile(s.indexOf('/') == 0 ? s.substr(1) : s);
-                 $("#tab1").click();
+                //show code viewer page
+                showpage('codeviewer');
             }
             s = window.ROOTDIR + s;
             $.get(s, function(t) {

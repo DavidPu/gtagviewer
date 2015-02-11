@@ -27,6 +27,8 @@ form = cgi.FieldStorage()
 fromhere = form.getvalue('fromhere', '')
 pattern = form.getvalue('pattern', '')
 type = form.getvalue('type', '')
+autocomp = form.getvalue('autocomp', '')
+icase = form.getvalue('icase', '')
 flag = 'd'
 if type == 'reference':
     flag = 'r'
@@ -41,6 +43,12 @@ elif type == 'idutils':
 elif type == 'file':
     flag = 'f'
 
+if icase == 'i':
+    flag = flag + 'i'
+
+if autocomp == 'c' and flag != 'g':
+    flag = 'c' + flag
+    #fromhere = ''
 
 fflag = ''
 if fromhere != '':

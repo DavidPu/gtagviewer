@@ -349,3 +349,6 @@ function getSearchValue(str, key, defvaule) {
 (function() {
     window.require(["gtagviewer/gtags"], function() {});
 })();
+
+//$("#editor").hide();
+//$("#filebrowser").show();

@@ -285,7 +285,7 @@ var Split = function(container, theme) {
         var width = this.$container.clientWidth;
         var height = this.$container.clientHeight;
         var reflow = typeof dispmask == "undefined" && typeof sz == "undefined" && typeof edge == "undefined";
-        var mask = typeof dispmask == "undefined" ? 0x0 : dispmask;
+        var mask = typeof dispmask == "undefined" ? this.dispmask : dispmask;
         mask &= 0x7;
         this.dispmask = mask;
         if (reflow ||this.deflayout == null) {
