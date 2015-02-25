@@ -52,44 +52,7 @@
 </style>
 <script type='text/javascript'>
 
-$(function() {
-	$('#searchbox').suggest('cgi-bin/global.py',{
-		minchars: 2,
-		delay: 100,
-		extraParams : {
-			type:  function() { return $('#searchtype').attr('stype').toLowerCase();},
-		}
-	});
-});
 
-function showpage(name) {
-  $('.active').removeClass('active');
-  $(['#', name].join('')).parent().addClass('active');
-  if (name == 'codeviewer') {
-    $('#filebrowser').hide();
-    $('#editor').show();
-  } else if (name == 'dirviewer') {
-    $('#editor').hide();
-    $('#filebrowser').show();
-  }
-}
-
-$(function(){
-    $('.pages').click(function(e){
-      showpage($(this)[0].id);
-      return false;
-    });
-    $('#editor').show();
-    $('#filebrowser').hide();
-    $('#searchtype').attr('stype', 'definition');
-});
-
-$(function(){
-    $('.searchopt').click(function(e){
-      $('#searchtype').attr('stype', $(this)[0].text)[0].text = $(this)[0].text;
-      $('#searchtype').append('<span class="caret"></span>');
-    });
-});
 
 </script>
 </head>
@@ -125,9 +88,10 @@ $(function(){
             <li><a class="searchopt" href="#">Reference</a></li>
             <li><a class="searchopt" href="#">Symbol</a></li>
             <li><a class="searchopt" href="#">Path</a></li>
+            <!-- grep is too slow -->
             <li><a class="searchopt" href="#">Grep</a></li>
             <li class="divider"></li>
-            <input type="checkbox" aria-label="..."> Icase
+            <input id="icase" type="checkbox" aria-label="..." checked=true > Icase
             <input type="checkbox" aria-label="..."> Other
           </ul>
         </li>
@@ -161,11 +125,14 @@ $(function(){
    <div class="pathurl"></div>
    <table class='flist' id="filelist"></table>
 </div>
+
+<script src="./gtagviewer/util.js"></script>
 <script src="./gtagviewer/dirlist.js"></script>
 <script src="./gtagviewer/split.js"></script>
 <script src="./gtagviewer/filehistory.js"></script>
 <script src="./gtagviewer/filetags.js"></script>
 <script src="./gtagviewer/gtags.js"></script>
+
 
 <script src="./3rdparty/bootstrap/bootstrap.js"></script>
 </body>

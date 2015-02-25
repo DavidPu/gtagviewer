@@ -28,9 +28,11 @@ var elEditor = document.getElementById("editor");
 //var theme = require("ace/theme/solarized_light");
 var theme = require("ace/theme/clouds");
 var Split = require("gtagviewer/split").Split;
-var modelist = require("ace/ext/modelist");
 var FileHistory = require("gtagviewer/filehistory").FileHistory;
 var FileTags = require("gtagviewer/filetags").FileTags;
+var util = require("gtagviewer/util");
+
+env.Util = util;
 
 var split = new Split(elEditor, theme);
 var editor = split.getEditor(split.CENTER);
@@ -183,14 +185,7 @@ env.split = split;
 window.env = env;
 
 
-function setEditMode(editor, path) {
-    return modelist.getModeForPath(path).mode;
-}
-
 /********************************* Editor setup END *****************************/
-
-/********************************* AcePopup setup START *****************************/
-var popup = new AcePopup(document.body || document.documentElement);
 
 var src = "";
 if (location.search.length > 1) {
@@ -218,7 +213,7 @@ if (location.hash.length > 1) {
 if (src == "") {
     src = '/cgi-bin/readme.py'
 } else {
-    setEditMode(editor, src);
+    util.setEditMode(editor, src);
     fileHistory.pushFile(src.substr(1)); //remove first '/'
     window.ROOTDIR + '/' + src  
 }
@@ -228,97 +223,18 @@ net.get(src, function(t){
     env.editor.gotoLine(lineNum);
     });
 
-function preProcessQuery(txt) {
-    if (!txt) {
-        return "";
-    }
-    var s = txt.indexOf("<pre>");
-    if (s === -1) {
-        return "";
-    }
-    var e = txt.indexOf("</pre>\n", s);
-    return txt.substring(s + "<pre>\n".length, e).replace(/<[^<>]*>/g, '');
-}
-function getDefinition(editor, type) {
-    var pos = editor.getCursorPosition();
-    var session = editor.session;
-    var range = editor.selection.getWordRange(pos.row, pos.column);
-    var line = session.getLine(pos.row);
-    var word = line.substring(range.start.column, range.end.column);
-    var q = type ? type : "definition";
-    //q = "grep";
-    var path = fileHistory.getCurFile();
-    var fromhere = pos.row + ':'+path;
 
-    if (word) {
-        //var src = "/cgi-bin/global.cgi?pattern=" + word + "&id=&type=" + q;
-	var src = "/cgi-bin/global.py?pattern=" + word + "&id=&type=" + q;
-	if (q == 'definition') {
-	    src += "&fromhere=" + fromhere;
-	}
-	
-        //var src = "/cgi-bin/global.cgi?pattern=" + word + "&id=&type=reference";
-        //var src = "/cgi-bin/global.cgi?pattern=" + word + "&id=&type=path";
-        net.get(src,
-                function (txt) {
-                    var split = env.split;
-                    var editor = split.getEditor(split.SOUTH);
-                    var ret = txt;//preProcessQuery(txt);
-                    if (ret === '') {
-                        editor.setValue(txt.replace(/<[^<>]*>/g, ''), 1);
-                    } else {
-                        editor.setValue(ret, 1);
-                        //editor.focus();
-                    }
-                }
-                );
-    }
+function getDefinition(editor, type) {
+    util.getDefinition(editor, type, fileHistory);
 }
 
 function gotoDefinition(editor) {
-    var pos = editor.getCursorPosition();
-    var session = editor.session;
-    var line = session.getLine(pos.row);
-    if (!line) {
-        return;
-    }
-    /* symbol  linenumber filepath codesnippet */
-    var files = line.trim(/\s+/).split(/\s+/);
-    if (files[2]) {
-        var path = files[2];
-        var symbol = files[0].trim(/\s+/);
-        var lnum = parseInt(files[1], 10);
-        var split = env.split;
-        var ceditor = split.getEditor(split.CENTER);
-        var src = window.ROOTDIR + "/" + path;
-        //History.pushState({file:'/' + path, line:lnum},  '/' + path, "?file=" + '/' + path);
-	fileHistory.pushFile(path);
-        net.get(src, function (txt) {
-
-            ceditor.setValue(txt, 1);
-            var session = ceditor.session;
-            setEditMode(ceditor, path);
-            var line = session.getLine(lnum-1, 10);
-            var column = line.indexOf(symbol);
-            ceditor.gotoLine(lnum, column + symbol.length/2);
-        });
-	fileTags.loadTags(path);
-    }
+    util.gotoDefinition(editor, fileHistory, fileTags);
 }
 
 function popTag(editor) {
     
-    getDefinition(editor, "reference");
-/*    
-    var s = History.getState();
-    if (s && s.data) {
-	var his = s.data;
-        net.get(his.file, function (t) {
-            editor.setValue(t, 1);
-            editor.gotoLine(his.line);
-        });
-    }
-*/    
+    getDefinition(editor, "reference"); 
 }
 
 $(window).on("resize", function(e) {
@@ -330,19 +246,6 @@ $(window).on("resize", function(e) {
     }
 });
 
-function getSearchValue(str, key, defvaule) {
-  var idx;
-  if (str.length > 1 && (idx = str.indexOf("?")) >= 0) {
-      var queries = str.substr(idx+1).split("&");
-      for (var i = 0; i < queries.length; i++) {
-	  if (queries[i].indexOf(key + "=") == 0) {
-	      var ret = queries[i].substr(key.length + 1);
-	      return ret.length > 0 ? ret : defvaule;
-	  }
-      }
-  }
-  return defvaule;
-}
 
 });
 

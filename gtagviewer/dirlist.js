@@ -1,3 +1,4 @@
+//var util = require("gtagviewer/util");
 
 $(function() {
   String.prototype.format = function() {
@@ -9,17 +10,8 @@ $(function() {
   };
 
   function getSearchValue(str, key, defvaule) {
-    var idx;
-    if (str.length > 1 && (idx = str.indexOf("?")) >= 0) {
-        var queries = str.substr(idx+1).split("&");
-        for (var i = 0; i < queries.length; i++) {
-            if (queries[i].indexOf(key + "=") == 0) {
-                var ret = queries[i].substr(key.length + 1);
-                return ret.length > 0 ? ret : defvaule;
-            }
-        }
-    }
-    return defvaule;
+    //return util.getSearchValue(str, key, defvaule);
+    return env.Util.getSearchValue(str, key, defvaule);
   }
   
     (function(window,undefined){
@@ -54,7 +46,7 @@ $(function() {
         }
     }
     //show code viewer page
-    showpage('codeviewer');
+    env.Util.showpage('codeviewer');
   }
   
   function updatePath(path) {
@@ -118,7 +110,7 @@ $(function() {
             if (fh) {
                 fh.pushFile(s.indexOf('/') == 0 ? s.substr(1) : s);
                 //show code viewer page
-                showpage('codeviewer');
+                env.Util.showpage('codeviewer');
             }
             s = window.ROOTDIR + s;
             $.get(s, function(t) {

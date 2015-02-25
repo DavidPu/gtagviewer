@@ -52,7 +52,9 @@
 		else
 			$input.keydown(processKey);		// onkeydown repeats arrow keys in IE/Safari
 		
-
+		$input.click(function(e){
+			console.log("aa");
+		});
 
 
 		function resetPosition() {
@@ -70,11 +72,14 @@
 		
 		function processKey(e) {
 			
-			// handling up/down/escape requires results to be visible
-			// handling enter/tab requires that AND a result to be selected
-			if ((/27$|38$|40$|101$/.test(e.keyCode) && $results.is(':visible')) ||
+			if (e.keyCode == 13) {
+				//env.Util.getDefinition($input.val(), env.Util.getSearchType() || 'definition', env.fileHistory);
+				//env.Util.showpage('codeviewer');
+				onSelect();
+			} else if ((/27$|38$|40$|101$/.test(e.keyCode) && $results.is(':visible')) ||
 				(/^13$|^9$/.test(e.keyCode) && getCurrentResult())) {
-		    
+		    		// handling up/down/escape requires results to be visible
+				// handling enter/tab requires that AND a result to be selected
 				if (e.preventDefault)
 					e.preventDefault();
 				if (e.stopPropagation)
@@ -111,7 +116,7 @@
 				timeout = setTimeout(suggest, options.delay);
 				prevLength = $input.val().length;
 				
-			}			
+			}
 				
 			
 		}
@@ -253,6 +258,10 @@
 
 		}
 		
+		function onSelect() {
+			env.Util.getDefinition($input.val(), env.Util.getSearchType() || 'definition', env.fileHistory);
+			env.Util.showpage('codeviewer');
+		}
 		function selectCurrentResult() {
 		
 			$currentResult = getCurrentResult();
@@ -263,6 +272,8 @@
 				
 				if (options.onSelect)
 					options.onSelect.apply($input[0]);
+				
+				onSelect();
 					
 			}
 		
