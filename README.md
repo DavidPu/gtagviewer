@@ -6,17 +6,19 @@
    ```bash
    cd ~/src/mydroid
    gtags
-   ... wait ....
    ```
 
-* untar the gtagviewer somewhere you want to run. e.g:
-   tar -jxf gtagviewer.tar.bz2 -C ~/gtagviewer
+* get the gtagviewer somewhere you want to run. e.g:
+  ```bash
+  git clone https://github.com/DavidPu/gtagviewer.git ~/gtagviewer
+  ```
 
 * modify gtagviewer/cgi-bin/config.py:
-	```bash
-   ROOT: point to your ~/src/mydroid. use FULL path instead.
-   FIND: point to your GNU find command, e.g: /usr/bin/find. check with 'which find'.
-	```
+   ```bash
+   ROOT: point to your ~/src/mydroid. use FULL path instead. e.g: /home/username/src/mydroid
+   FIND: point to location of GNU find command, e.g: /usr/bin/find. check with 'which find'.
+   GLOBAL: point to location of global command, e.g: /usr/local/bin/global
+   ```
 * create a symbol link 'src' ---> ~/src/mydroid under gtagviewer folder. e.g:
    ```bash
   cd ~/gtagviewer
@@ -37,3 +39,18 @@
 * Mouse: try to left/right/middle button click to see what happens..
 
    Happy Hacking!
+
+## Screen Shot
+
+* simple file browser:
+   ![search path](demo/images/dirlist.png?raw=true)
+
+* search box with autocomplete supported:	
+   ![search path](demo/images/autocomp.png?raw=true)
+
+* definition/reference search with Left/Middle mouse key click:
+   ![search path](demo/images/searchdef.png?raw=true)
+
+* path search with regex support:
+   ![search path](demo/images/path.png?raw=true)
+
